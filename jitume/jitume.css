@@ -1,0 +1,117 @@
+body {
+  background-image: linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url(image.png);
+  background-repeat: no-repeat;
+  /* background-position: cover; */
+  background-size: cover;
+}
+.logo {
+  width: 70px;
+  height: 80px;
+  margin-bottom: -39px;
+}
+.h1 {
+  margin-left: 50px;
+  margin-top: -55px;
+  font-size: 10px;
+}
+.div {
+  margin: auto;
+  justify-content: center;
+  display: flex;
+  gap: 50px;
+}
+
+header {
+  background-color: #1c2833;
+  color: WHITE;
+  margin-bottom: 50px;
+  border-radius: 10px;
+}
+a {
+  text-decoration: none;
+  color: rgb(25, 91, 43);
+}
+header button {
+  /* background: rgb(143, 176, 67); */
+  /* font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; */
+  border-radius: 15px;
+  border-style: hidden;
+  font-weight: bold;
+  width: 90px;
+  height: 25px;
+  background: #eaedef;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  cursor: pointer;
+}
+/* creates the enviroment for the dropdown menu thing /the positioning wrapper */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+.dropdown-menu {
+  display: none;
+  /* position: absolute; */
+  position: relative;
+}
+.footer {
+  background-color: #1c2833;
+  color: white;
+  margin-top: 30px;
+  padding-left: 80px;
+  /* border-radius: 15px; */
+  animation: colorChange 7s infinite;
+}
+@keyframes colorChange {
+  40% {
+    background-color: #3498db;
+  }
+  40% {
+    background-color: #1abc9c;
+  }
+  10% {
+    background-color: #647896;
+  }
+}
+.container {
+  /* max-width: 1200px;  */
+  padding-top: 10px;
+}
+h3 {
+  color: rgb(246, 250, 246);
+  padding-top: 30px;
+}
+.field {
+  width: 280px;
+  height: auto;
+  margin-left: 400px;
+  background-color: #0fa4af ;
+  border-radius: 10px;
+  /* padding: auto; */
+}
+.fname {
+  margin-left: 24px;
+}
+.lname {
+  margin-left: 25px;
+}
+.Idnumber {
+  margin-left: 16px;
+}
+.comment {
+  margin-left: 25px;
+}
+#registerinput {
+  margin-left: 110px;
+}
+input {
+  border-radius: 5px;
+}
+.footer p:hover{
+  color: chartreuse;
+  cursor: pointer;
+}
+ button:hover{
+    box-shadow: 0  0  50px  rgba(29, 226, 240);
+    transform: translate(-10px);
+    background-color: #10e73b;
+ } 
