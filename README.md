@@ -118,19 +118,26 @@ PORT=8000
 
 ---
 
-## 9. MySQL Database Setup
+## 9. MySQL — Create the Database & Seed
 
-Create the database in MySQL:
+The seed script handles database creation automatically. Just run:
 
-```sql
-CREATE DATABASE northstar_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```bash
+python seed.py
 ```
+
+This will:
+1. Create the `northstar_db` database if it doesn't exist
+2. Create all tables
+3. Insert 10 customers, 15 orders, 10 products, and 35 inventory rows
+
+Safe to re-run — clears existing data before inserting.
 
 ---
 
-## 10. Database Tables
+## 10. Database Tables (reference)
 
-Tables are created automatically when you run the seed script. You can also create them manually:
+Tables are created automatically by the seed script. To create them without seeding:
 
 ```python
 from app.database import engine, Base
@@ -140,23 +147,7 @@ Base.metadata.create_all(bind=engine)
 
 ---
 
-## 11. Seed the Database
-
-```bash
-python seed.py
-```
-
-This inserts:
-- 10 customers
-- 15 orders (Processing, Shipped, Delivered, Cancelled)
-- 10 products
-- 35 inventory rows (mix of in-stock and out-of-stock)
-
-Safe to re-run — clears existing data first.
-
----
-
-## 12. Run the Server
+## 11. Run the Server
 
 ```bash
 uvicorn app.main:app --reload --port 8000
@@ -166,7 +157,7 @@ Server will be available at: `http://localhost:8000`
 
 ---
 
-## 13. API Endpoints
+## 12. API Endpoints
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -179,7 +170,7 @@ Server will be available at: `http://localhost:8000`
 
 ---
 
-## 14. Example Requests
+## 13. Example Requests
 
 **Order status:**
 ```bash
@@ -200,7 +191,7 @@ curl -X POST http://localhost:8000/api/support/query \
 
 ---
 
-## 15. Example Responses
+## 14. Example Responses
 
 **Order found:**
 ```json
@@ -266,7 +257,7 @@ curl -X POST http://localhost:8000/api/support/query \
 
 ---
 
-## 16. Run Tests
+## 15. Run Tests
 
 Tests use an in-memory SQLite database — no MySQL connection needed.
 
@@ -282,7 +273,7 @@ pytest -v
 
 ---
 
-## 17. Known Limitations
+## 16. Known Limitations
 
 - Classification uses keyword matching — ambiguous messages may be misclassified
 - Product name matching in support queries is exact substring match (case-insensitive)
@@ -292,7 +283,7 @@ pytest -v
 
 ---
 
-## 18. Future Improvements
+## 17. Future Improvements
 
 - Add JWT authentication for customer-specific order lookups
 - Improve classification with a lightweight ML model

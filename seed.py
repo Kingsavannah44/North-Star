@@ -2,9 +2,35 @@
 Seed script — populates the database with realistic sample data.
 Safe to re-run: clears existing data before inserting.
 
+This script also creates the database if it does not already exist.
+
 Usage:
     python seed.py
 """
+
+import os
+from sqlalchemy import create_engine, text
+from dotenv import load_dotenv
+
+load_dotenv()
+
+# Step 1: ensure the database itself exists before connecting to it
+def ensure_database_exists():
+    base_url = (
+        f"mysql+pymysql://{os.getenv('DATABASE_USER')}:{os.getenv('DATABASE_PASSWORD')}"
+        f"@{os.getenv('DATABASE_HOST', 'localhost')}:{os.getenv('DATABASE_PORT', '3306')}/"
+    )
+    db_name = os.getenv("DATABASE_NAME", "northstar_db")
+    tmp_engine = create_engine(base_url)
+    with tmp_engine.connect() as conn:
+        conn.execute(text(
+            f"CREATE DATABASE IF NOT EXISTS `{db_name}` "
+            "CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+        ))
+    print(f"✓ Database '{db_name}' is ready.")
+    tmp_engine.dispose()
+
+ensure_database_exists()
 
 from app.database import engine, SessionLocal
 from app.database import Base
@@ -16,7 +42,6 @@ from app.models.product import Product
 from app.models.inventory import Inventory
 
 from datetime import date
-
 
 def seed():
     # Create all tables if they don't exist
