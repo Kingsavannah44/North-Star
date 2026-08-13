@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Northstar Retail - Customer Support</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="chat-container">
+        <!-- Header -->
+        <div class="chat-header">
+            <div class="brand">
+                <span class="status-dot"></span>
+                <h2>Northstar Assistant</h2>
+            </div>
+            <p class="subtitle">Automated Support Deflection System</p>
+        </div>
+
+        <!-- Chat Log Window -->
+        <div class="chat-body" id="chatBody">
+            <div class="message bot-message">
+                Hello! Welcome to Northstar Retail. How can I assist you today?
+            </div>
+        </div>
+
+        <!-- Quick Action Buttons -->
+        <div class="options-container">
+            <button class="opt-btn" id="btnOrder">📦 Check Order Status</button>
+            <button class="opt-btn" id="btnReturn">🔄 Returns & Refunds</button>
+        </div>
+
+        <!-- Input Box -->
+        <div class="chat-footer">
+            <input type="text" id="userInput" placeholder="Type Order ID or ask a question..." />
+            <button id="sendBtn">Send</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
