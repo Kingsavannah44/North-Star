@@ -1,11 +1,11 @@
 Team Charter
 North-Star sprint. Agreed Thu 13 Aug. Deadline Sat 15 Aug 11:59pm. We submit 6pm Sat so we're not rushing at midnight.
-Who does what
-Ibrahim (ibrahim-warsame) - team lead / PM. Board, charter, scope, standups, audit log.
+ibrahim (ibrahim.warsame - Team Lead
 Brian (Kingsavannah44) - backend. Seed data, order lookup, intent router, order status flow.
 Ursula (MACCUE) - frontend. Chat UI, returns/refunds flow, handoff display.
 Eric (Emyrseric) - QA. Test cases, running tests, results log.
-Batula (fill your github name). README, go-live note, demo script.
+Batula - README, go-live note, demo script.
+
 Who owns which files
 Nobody edits someone else's files. This is what stops merge conflicts.
 
