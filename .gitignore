@@ -1,3 +1,26 @@
-node_modules/
+# Environment
 .env
-coverage/
+*.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+venv/
+env/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+test.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
