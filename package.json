@@ -1,0 +1,26 @@
+{
+  "name": "northstar-support-backend",
+  "version": "1.0.0",
+  "description": "Support deflection backend API for Northstar Retail Co. — order status, stock availability, and query classification.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "seed": "node src/seeders/seed.js",
+    "test": "jest --runInBand --forceExit"
+  },
+  "keywords": ["northstar", "ecommerce", "support-deflection", "express", "sequelize"],
+  "author": "Northstar Retail Co.",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mysql2": "^3.23.3",
+    "sequelize": "^6.37.8"
+  },
+  "devDependencies": {
+    "jest": "^30.4.2",
+    "supertest": "^7.2.2"
+  }
+}
