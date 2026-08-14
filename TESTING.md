@@ -88,9 +88,9 @@ The MVP uses mock order data rather than a real production database.
 - **Issues identified:** To be completed during testing.
 
 ### Test Case 9: Stock Availability Query
-- **Feature being tested:** Human Handoff
-- **Test steps:** Ask whether a product is currently in stock.
-- **Expected result:** The system should not guess or provide an unsupported stock answer. The query should be handed off to a human with a ticket reference.
+- **Feature being tested:** Stock Availability
+- **Test steps:** Ask whether a known product and size are currently in stock.
+- **Expected result:** The system should return the correct stock availability for the requested product and size using the available inventory data.
 - **Actual result:** To be completed during testing.
 - **Status:** Pending
 - **Issues identified:** To be completed during testing.
