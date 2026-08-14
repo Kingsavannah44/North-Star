@@ -6,7 +6,6 @@ from app.services.inventory_service import check_availability
 from app.models.product import Product
 from app.utils.exceptions import OrderNotFoundError, ProductNotFoundError, SizeNotFoundError
 
-
 ORDER_KEYWORDS = [
     "where is my order", "order status", "track my order",
     "has my order shipped", "when will my order", "order number",
@@ -22,14 +21,11 @@ STOCK_KEYWORDS = [
 
 
 def classify_message(message: str) -> str:
-    lower = message.lower()
-
-    if any(kw in lower for kw in ORDER_KEYWORDS):
+    text = message.lower()
+    if any(kw in text for kw in ORDER_KEYWORDS):
         return "order_status"
-
-    if any(kw in lower for kw in STOCK_KEYWORDS):
+    if any(kw in text for kw in STOCK_KEYWORDS):
         return "stock_availability"
-
     return "unknown"
 
 
@@ -44,10 +40,9 @@ def extract_size(message: str) -> Optional[str]:
 
 
 def find_product_in_message(db: Session, message: str) -> Optional[Product]:
-    products = db.query(Product).all()
-    lower = message.lower()
-    for product in products:
-        if product.name.lower() in lower:
+    text = message.lower()
+    for product in db.query(Product).all():
+        if product.name.lower() in text:
             return product
     return None
 
@@ -61,10 +56,7 @@ def handle_support_query(db: Session, message: str) -> dict:
         if not order_number:
             return {
                 "category": category,
-                "answer": (
-                    "It looks like you have a question about an order. "
-                    "Please provide your order number (e.g. NS1001) so we can look it up."
-                ),
+                "answer": "It looks like you have a question about an order. Please provide your order number (e.g. NS1001) so we can look it up.",
                 "deflected": False,
             }
 
@@ -73,39 +65,24 @@ def handle_support_query(db: Session, message: str) -> dict:
         except OrderNotFoundError:
             return {
                 "category": category,
-                "answer": (
-                    f"We couldn't find order {order_number}. "
-                    "Please double-check the number or contact Northstar Support."
-                ),
+                "answer": f"We couldn't find order {order_number}. Please double-check the number or contact Northstar Support.",
                 "deflected": False,
             }
 
-        status_answers = {
-            "Processing": (
-                f"Your order {order.order_number} is currently being processed. "
-                "We'll notify you once it ships."
-            ),
+        responses = {
+            "Processing": f"Your order {order.order_number} is currently being processed. We'll notify you once it ships.",
             "Shipped": (
                 f"Your order {order.order_number} has shipped"
                 + (f" (tracking: {order.tracking_number})" if order.tracking_number else "")
                 + (f" and is expected to arrive on {order.estimated_delivery}." if order.estimated_delivery else ".")
             ),
-            "Delivered": (
-                f"Your order {order.order_number} has been delivered. "
-                "We hope you enjoy your purchase!"
-            ),
-            "Cancelled": (
-                f"Your order {order.order_number} was cancelled. "
-                "Please contact Northstar Support if you need further assistance."
-            ),
+            "Delivered": f"Your order {order.order_number} has been delivered. We hope you enjoy your purchase!",
+            "Cancelled": f"Your order {order.order_number} was cancelled. Please contact Northstar Support if you need help.",
         }
 
         return {
             "category": category,
-            "answer": status_answers.get(
-                order.status,
-                f"Your order {order.order_number} status is: {order.status}.",
-            ),
+            "answer": responses.get(order.status, f"Your order {order.order_number} status is: {order.status}."),
             "deflected": True,
         }
 
@@ -116,46 +93,25 @@ def handle_support_query(db: Session, message: str) -> dict:
         if not product:
             return {
                 "category": category,
-                "answer": (
-                    "I couldn't identify which product you're asking about. "
-                    "Please visit our product pages or contact Northstar Support."
-                ),
+                "answer": "I couldn't identify which product you're asking about. Please visit our product pages or contact Northstar Support.",
                 "deflected": False,
             }
 
         try:
-            availability = check_availability(db, product.id, size)
+            result = check_availability(db, product.id, size)
         except SizeNotFoundError as e:
-            return {
-                "category": category,
-                "answer": e.detail["message"],
-                "deflected": False,
-            }
+            return {"category": category, "answer": e.detail["message"], "deflected": False}
         except ProductNotFoundError:
-            return {
-                "category": "unknown",
-                "answer": "I couldn't find an automated answer. Please contact Northstar Support.",
-                "deflected": False,
-            }
+            return {"category": "unknown", "answer": "I couldn't find an automated answer. Please contact Northstar Support.", "deflected": False}
 
-        size_text = f" size {availability['size']}" if availability["size"] else ""
+        size_text = f" size {result['size']}" if result["size"] else ""
 
-        if availability["available"]:
-            answer = (
-                f"{availability['product_name']}{size_text} is currently in stock. "
-                f"{availability['quantity']} unit(s) available."
-            )
+        if result["available"]:
+            answer = f"{result['product_name']}{size_text} is currently in stock. {result['quantity']} unit(s) available."
         else:
-            answer = (
-                f"Sorry, {availability['product_name']}{size_text} is currently out of stock. "
-                "Please check back later or contact Northstar Support."
-            )
+            answer = f"Sorry, {result['product_name']}{size_text} is currently out of stock. Please check back later or contact Northstar Support."
 
-        return {
-            "category": category,
-            "answer": answer,
-            "deflected": True,
-        }
+        return {"category": category, "answer": answer, "deflected": True}
 
     return {
         "category": "unknown",
