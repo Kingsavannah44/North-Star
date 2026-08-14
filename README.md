@@ -1,110 +1,120 @@
 # Northstar Support Deflection Backend
 
-Backend API for Northstar Retail Co.'s support deflection MVP, built with Python, FastAPI, and MySQL.
+This is the backend API for Northstar Retail Co.'s support deflection MVP. It was built as part of a 5-day sprint to reduce the volume of repetitive customer support tickets.
 
 ---
 
-## 1. Project Overview
+## What problem does this solve?
 
-A REST API that automatically answers two of the most common customer support question types:
-
-- **Order status** — "Where is my order NS1001?"
-- **Stock availability** — "Is Nike Air Max size 42 available?"
+Northstar's support team was getting overwhelmed by the same questions every day — mostly people asking where their order is or whether something is in stock. This backend handles those questions automatically so they never need to reach a human agent.
 
 ---
 
-## 2. Business Problem
+## What it covers
 
-Northstar's customer support team is overwhelmed by repetitive questions. This MVP intercepts and automatically answers the most common queries, reducing the volume of tickets that reach human agents.
+- Order status lookup by order number
+- Stock availability check by product and size
+- Automatic classification of customer support messages
+- Automated responses for supported question types
+- Clean fallback when the system can't confidently answer
 
----
-
-## 3. MVP Scope
-
-| Feature | Included |
-|---------|----------|
-| Order status lookup | ✅ |
-| Stock availability check | ✅ |
-| Support query classification | ✅ |
-| Automated support answers | ✅ |
-| Returns & refunds | ❌ (out of scope) |
-| Authentication | ❌ (out of scope) |
-| Admin dashboard | ❌ (out of scope) |
+Returns and refunds are out of scope for this sprint.
 
 ---
 
-## 4. Technology Stack
+## Tech stack
 
-| Layer | Technology |
-|-------|-----------|
-| Language | Python 3.11+ |
-| Framework | FastAPI |
-| Database | MySQL |
-| ORM | SQLAlchemy 2.0 |
-| Validation | Pydantic v2 |
-| DB Driver | PyMySQL |
-| Server | Uvicorn |
-| Testing | Pytest + HTTPX |
+- Python 3.11+
+- FastAPI
+- MySQL
+- SQLAlchemy ORM
+- Pydantic v2
+- PyMySQL
+- Uvicorn
+- Pytest + HTTPX for testing
 
 ---
 
-## 5. Project Structure
+## Project structure
 
 ```
 northstar-backend/
 ├── app/
-│   ├── main.py               # FastAPI app, CORS, routers
-│   ├── database.py           # SQLAlchemy engine and session
-│   ├── models/               # SQLAlchemy ORM models
-│   ├── schemas/              # Pydantic request/response schemas
-│   ├── routes/               # FastAPI route handlers
-│   ├── services/             # Business logic
-│   └── utils/                # Shared exceptions
-├── tests/                    # Pytest test suite
-├── seed.py                   # Database seed script
+│   ├── main.py
+│   ├── database.py
+│   ├── models/
+│   │   ├── customer.py
+│   │   ├── order.py
+│   │   ├── product.py
+│   │   └── inventory.py
+│   ├── schemas/
+│   │   ├── order.py
+│   │   ├── product.py
+│   │   └── support.py
+│   ├── routes/
+│   │   ├── orders.py
+│   │   ├── products.py
+│   │   └── support.py
+│   ├── services/
+│   │   ├── order_service.py
+│   │   ├── inventory_service.py
+│   │   └── support_service.py
+│   └── utils/
+│       └── exceptions.py
+├── tests/
+│   ├── conftest.py
+│   ├── test_orders.py
+│   ├── test_products.py
+│   └── test_support.py
+├── seed.py
 ├── requirements.txt
+├── pytest.ini
 ├── .env.example
 └── README.md
 ```
 
 ---
 
-## 6. Installation
+## Getting started
+
+### 1. Clone the repo
 
 ```bash
-git clone <repo-url>
-cd northstar-backend
+git clone https://github.com/Kingsavannah44/North-Star.git
+cd North-Star
 ```
 
----
-
-## 7. Virtual Environment Setup
+### 2. Create a virtual environment
 
 ```bash
-# Create virtual environment
 python -m venv venv
+```
 
-# Activate (Windows)
+Activate it:
+
+```bash
+# Windows
 venv\Scripts\activate
 
-# Activate (macOS/Linux)
+# macOS / Linux
 source venv/bin/activate
+```
 
-# Install dependencies
+### 3. Install dependencies
+
+```bash
 pip install -r requirements.txt
 ```
 
----
+### 4. Set up environment variables
 
-## 8. Environment Configuration
-
-Copy the example file and fill in your credentials:
+Copy the example file and fill in your database credentials:
 
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env`:
+Open `.env` and update:
 
 ```
 DATABASE_HOST=localhost
@@ -116,73 +126,52 @@ APP_ENV=development
 PORT=8000
 ```
 
----
+### 5. Seed the database
 
-## 9. MySQL — Create the Database & Seed
-
-The seed script handles database creation automatically. Just run:
+This will create the database if it doesn't exist, create all tables, and insert sample data:
 
 ```bash
 python seed.py
 ```
 
-This will:
-1. Create the `northstar_db` database if it doesn't exist
-2. Create all tables
-3. Insert 10 customers, 15 orders, 10 products, and 35 inventory rows
+You'll get 10 customers, 15 orders across all statuses, 10 products and 36 inventory rows with a mix of in-stock and out-of-stock sizes.
 
-Safe to re-run — clears existing data before inserting.
-
----
-
-## 10. Database Tables (reference)
-
-Tables are created automatically by the seed script. To create them without seeding:
-
-```python
-from app.database import engine, Base
-import app.models  # ensure all models are imported
-Base.metadata.create_all(bind=engine)
-```
-
----
-
-## 11. Run the Server
+### 6. Start the server
 
 ```bash
 uvicorn app.main:app --reload --port 8000
 ```
 
-Server will be available at: `http://localhost:8000`
+The API will be running at `http://localhost:8000`.
+
+Swagger docs are at `http://localhost:8000/docs`.
 
 ---
 
-## 12. API Endpoints
+## API endpoints
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/health` | Health check |
-| GET | `/api/orders/{order_number}` | Get order status |
-| GET | `/api/products/{product_id}/availability` | Check stock (optional `?size=`) |
-| POST | `/api/support/query` | Submit support question |
-| GET | `/docs` | Swagger UI |
-| GET | `/redoc` | ReDoc |
+| GET | `/health` | Check if the server is running |
+| GET | `/api/orders/{order_number}` | Look up an order by its number |
+| GET | `/api/products/{product_id}/availability` | Check stock, optional `?size=` param |
+| POST | `/api/support/query` | Submit a support question |
 
 ---
 
-## 13. Example Requests
+## Example requests
 
-**Order status:**
+**Check an order:**
 ```bash
 curl http://localhost:8000/api/orders/NS1001
 ```
 
-**Stock availability with size:**
+**Check stock for a specific size:**
 ```bash
 curl "http://localhost:8000/api/products/1/availability?size=42"
 ```
 
-**Support query:**
+**Ask a support question:**
 ```bash
 curl -X POST http://localhost:8000/api/support/query \
   -H "Content-Type: application/json" \
@@ -191,7 +180,7 @@ curl -X POST http://localhost:8000/api/support/query \
 
 ---
 
-## 14. Example Responses
+## Example responses
 
 **Order found:**
 ```json
@@ -217,7 +206,7 @@ curl -X POST http://localhost:8000/api/support/query \
 }
 ```
 
-**Stock available:**
+**Stock check:**
 ```json
 {
   "success": true,
@@ -231,7 +220,7 @@ curl -X POST http://localhost:8000/api/support/query \
 }
 ```
 
-**Support — deflected:**
+**Support question — answered automatically:**
 ```json
 {
   "success": true,
@@ -243,7 +232,7 @@ curl -X POST http://localhost:8000/api/support/query \
 }
 ```
 
-**Support — not deflected:**
+**Support question — escalated to human:**
 ```json
 {
   "success": true,
@@ -257,15 +246,15 @@ curl -X POST http://localhost:8000/api/support/query \
 
 ---
 
-## 15. Run Tests
+## Running tests
 
-Tests use an in-memory SQLite database — no MySQL connection needed.
+Tests use SQLite in memory so you don't need a MySQL connection running.
 
 ```bash
 pytest
 ```
 
-Run with verbose output:
+Verbose output:
 
 ```bash
 pytest -v
@@ -273,21 +262,21 @@ pytest -v
 
 ---
 
-## 16. Known Limitations
+## Known limitations
 
-- Classification uses keyword matching — ambiguous messages may be misclassified
-- Product name matching in support queries is exact substring match (case-insensitive)
-- No authentication or rate limiting
-- No pagination on any endpoints
-- Order number extraction only supports the NS#### format
+- The support classifier uses keyword matching, so unusual phrasing can be misclassified
+- Product name matching in support queries is a simple substring check
+- No authentication on any endpoints
+- Order number extraction only works for the NS#### format
+- No pagination on any listing endpoints
 
 ---
 
-## 17. Future Improvements
+## What could be improved next
 
-- Add JWT authentication for customer-specific order lookups
-- Improve classification with a lightweight ML model
+- Add JWT authentication so customers can only see their own orders
+- Improve the classifier with a lightweight ML model
 - Add pagination to product listings
-- Implement returns & refunds workflow
-- Add rate limiting per IP/customer
-- Introduce Redis caching for frequently queried orders/products
+- Build out the returns and refunds workflow
+- Add rate limiting to prevent abuse
+- Cache frequently queried orders and products with Redis
