@@ -5,6 +5,7 @@ pymysql==1.2.0
 python-dotenv==1.2.2
 pydantic==2.13.4
 pydantic-settings==2.15.0
+aiofiles>=23.2.1
 
 # Testing
 pytest==9.1.1
