@@ -1,1 +1,44 @@
 <!-- index.html — owned by the frontend developer -->
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Northstar Support - Chatbot</title>
+    <link rel="stylesheet" href="/static/style.css">
+ </head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><img src="bot.jpg" alt="Bot"> Northstar Support Bot</h1>
+            <p>Instant answers to order and inventory questions</p>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <div class="empty-state">
+                <h2>Welcome to Northstar Support!</h2>
+                <p>Ask me about your orders or product availability</p>
+            </div>
+        </div>
+
+        <div class="input-area">
+            <div class="suggestions" id="suggestions">
+                <button class="suggestion-btn" onclick="sendMessage('Where is my order NS1001?')">Track Order</button>
+                <button class="suggestion-btn" onclick="sendMessage('Do you have size M available?')">Check Stock</button>
+                <button class="suggestion-btn" onclick="sendMessage('Order status?')">Order Status</button>
+            </div>
+            <div class="input-wrapper">
+                <input 
+                    type="text" 
+                    id="messageInput" 
+                    placeholder="Ask about orders or inventory..."
+                    onkeypress="if(event.key === 'Enter') sendMessage()"
+                >
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+   <script src="/static/app.js"></script>
+</body>
+</html>
