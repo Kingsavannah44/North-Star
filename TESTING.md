@@ -112,3 +112,135 @@ For each test case:
 - Any bugs or unexpected behaviour will be documented.
 - Failed tests will be reported to the appropriate team member.
 - Corrected features will be retested before final submission.
+
+
+- Corrected features will be retested before final submission.
+## Backend/API Testing Results
+
+Backend testing was performed using the FastAPI Swagger interface at `http://localhost:8000/docs` against the available seeded mock data.
+
+### Test Case 1: Valid Order Status Request
+- **Test input:** Order `NS1001`
+- **Actual result:** The API successfully returned the order information for NS1001.
+- **Status:** PASS
+- **Issues identified:** None.
+
+### Test Case 2: Shipped Order With Tracking Information
+- **Test input:** Order `NS1001`
+- **Actual result:** The API returned the order as Shipped with tracking number `TRK98231` and estimated delivery date `2026-08-16`.
+- **Status:** PASS
+- **Issues identified:** None.
+
+### Test Case 3: Shipped Order Without Tracking Number
+- **Actual result:** No seeded order exists with status Shipped and `tracking_number=None`.
+- **Status:** BLOCKED / NOT TESTABLE
+- **Issues identified:** Required test data is not available in the seeded dataset.
+
+### Test Case 4: Unknown Order Reference
+- **Test input:** Order `NS9999`
+- **Actual result:** The API returned a 404 response with `ORDER_NOT_FOUND` rather than inventing order information.
+- **Status:** PASS
+- **Issues identified:** None.
+
+### Test Case 5: Return Request Within 30-Day Window
+- **Actual result:** The return request was not handled as a returns flow and fell back to the support/unknown response.
+- **Status:** FAIL
+- **Issues identified:** Returns functionality was not available through the tested backend support flow.
+
+### Test Case 6: Return Request Outside 30-Day Window
+- **Actual result:** The required sample order delivered 55 days ago was not available in the provided mock data.
+- **Status:** BLOCKED / NOT TESTABLE
+- **Issues identified:** Required test data is missing.
+
+### Test Case 7: Refund Status Request
+- **Actual result:** No refund-in-progress data was available in the provided mock dataset.
+- **Status:** BLOCKED / NOT TESTABLE
+- **Issues identified:** Required refund test data is missing.
+
+### Test Case 8: Natural-Language Returns or Refunds Query
+- **Actual result:** The natural-language returns/refund request was not correctly recognized as a returns/refunds request.
+- **Status:** FAIL
+- **Issues identified:** Returns/refunds intent classification did not behave as expected.
+
+### Test Case 9: Stock Availability Query
+- **Actual result:** Stock availability was correctly returned from the seeded inventory. Nike Air Max size 42 was available with quantity 8, while size 43 was unavailable with quantity 0.
+- **Status:** PASS
+- **Issues identified:** None.
+
+### Test Case 10: Unsupported or Unclear Support Query
+- **Test input:** Unsupported password-related support query.
+- **Actual result:** The query was classified as unknown and returned the support fallback instead of inventing an answer.
+- **Status:** PASS
+- **Issues identified:** None.
+
+### Backend Testing Summary
+- **Passed:** 5
+- **Failed:** 2
+- **Blocked / Not Testable:** 3
+
+## End-to-End Chatbot Testing Results
+
+End-to-end testing was performed using the Northstar Support Bot frontend at `http://localhost:8000/` while the FastAPI backend was running. These tests verified the complete flow from the user interface to the backend and back to the displayed chatbot response.
+
+### Test Case 1: Valid Order Status Request
+- **Test input:** `Where is my order NS1001?`
+- **Actual result:** The chatbot classified the request as `ORDER STATUS` and reported that order NS1001 had shipped with tracking number `TRK98231` and expected arrival date `2026-08-16`.
+- **Status:** PASS
+- **Issues identified:** None.
+
+### Test Case 2: Shipped Order With Tracking Information
+- **Test input:** `Where is my order NS1005?`
+- **Actual result:** The chatbot classified the request as `ORDER STATUS` and reported that NS1005 had shipped with tracking number `TRK44512` and expected arrival date `2026-08-18`.
+- **Status:** PASS
+- **Issues identified:** None.
+
+### Test Case 3: Shipped Order Without Tracking Number
+- **Actual result:** No shipped order without a tracking number exists in the seeded test data. All seeded shipped orders contain tracking numbers.
+- **Status:** BLOCKED / NOT TESTABLE
+- **Issues identified:** Required test data is missing.
+
+### Test Case 4: Unknown Order Reference
+- **Test input:** `Where is my order NS9999?`
+- **Actual result:** The chatbot classified the request as `ORDER STATUS` and responded that order NS9999 could not be found. It advised the user to double-check the number or contact Northstar Support.
+- **Status:** PASS
+- **Issues identified:** None. The chatbot did not invent order information.
+
+### Test Case 5: Return Request Within 30-Day Window
+- **Test input:** `How do I return order NS1003?`
+- **Actual result:** The chatbot classified the request as `UNKNOWN` and responded that it could not find an automated answer and that the user should contact Northstar Support.
+- **Status:** FAIL
+- **Issues identified:** The chatbot did not recognize or process the return request as a Returns and Refunds query.
+
+### Test Case 6: Return Request Outside 30-Day Window
+- **Actual result:** The required sample order delivered 55 days ago was not available in the provided mock data.
+- **Status:** BLOCKED / NOT TESTABLE
+- **Issues identified:** Required test data is missing.
+
+### Test Case 7: Refund Status Request
+- **Actual result:** No refund-in-progress test data was available in the provided mock dataset.
+- **Status:** BLOCKED / NOT TESTABLE
+- **Issues identified:** Required refund test data is missing.
+
+### Test Case 8: Natural-Language Returns or Refunds Query
+- **Test input:** `How do I send this back?`
+- **Actual result:** The chatbot classified the request as `UNKNOWN` and directed the user to Northstar Support.
+- **Status:** FAIL
+- **Issues identified:** Natural-language return intent was not recognized by the chatbot.
+
+### Test Case 9: Stock Availability Query
+- **Test input:** `Is Nike Air Max size 43 available?`
+- **Actual result:** The chatbot classified the request as `STOCK AVAILABILITY` and correctly reported that Nike Air Max size 43 was out of stock. This matched the seeded inventory quantity of `0`.
+- **Status:** PASS
+- **Issues identified:** None.
+
+### Test Case 10: Unsupported or Unclear Support Query
+- **Test input:** `Can I change my account password?`
+- **Actual result:** The chatbot classified the query as `UNKNOWN` and directed the user to Northstar Support instead of inventing an answer.
+- **Status:** PASS
+- **Issues identified:** None.
+
+### End-to-End Testing Summary
+- **Passed:** 5
+- **Failed:** 2
+- **Blocked / Not Testable:** 3
+- **Total planned test cases:** 10
