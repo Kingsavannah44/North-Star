@@ -1,3 +1,18 @@
+Northstar Retail's support team answers the same three questions all day: where is my order, how do I return this, and is this in stock. Every one of those is a ticket a person has to open and answer by hand.
+
+This is a chatbot that answers all three without a human, so the ticket never gets opened. Anything it can't answer is passed to a person with a ticket reference rather than guessed at.
+
+Run it with one command - `python start.py` - then open http://localhost:8000
+
+**Team**
+- Ibrahim Warsame - team lead
+- Brian Kipkemoi - backend
+- Ursula Immaculate - frontend
+- Eric Kamau - QA
+- Batula - documentation
+
+Backend setup instructions are below. The go-live readiness note is in GO-LIVE.md.
+
 # Northstar Support Deflection Backend
 
 This is the backend API for Northstar Retail Co.'s support deflection MVP. It was built as part of a 5-day sprint to reduce the volume of repetitive customer support tickets.
